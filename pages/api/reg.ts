@@ -36,7 +36,7 @@ export default async function handler(
     }).then(res => res.json())
 
     if (pending_resp_data.some(invitation => invitation.email === email)) {
-        return new Response(JSON.stringify({message: '已发送邀请'}), {status: 204})
+        return new Response(JSON.stringify({message: '已发送邀请'}), {status: 201})
     }
 
     const invite_resp = await fetch(`https://api.github.com/orgs/${process.env.GITHUB_ORG}/invitations`, {
