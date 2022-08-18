@@ -18,12 +18,12 @@ export default async function handler(
     req: NextRequest
 ): Promise<Response> {
     if (req.method !== 'POST') {
-        return new Response('Method not allowed', {status: 405});
+        return new Response('Method not allowed', {status: 405, headers: {'Content-Type': 'application/json'}});
     }
     const email = await req.text()
     const {result, message} = emailTest(email)
     if (!result) {
-        return new Response(JSON.stringify({message}), {status: 400})
+        return new Response(JSON.stringify({message}), {status: 400, headers: {'Content-Type': 'application/json'}})
     }
 
     const pending_resp_data: any[] = await fetch(`https://api.github.com/orgs/${process.env.GITHUB_ORG}/invitations`, {
@@ -36,7 +36,10 @@ export default async function handler(
     }).then(res => res.json())
 
     if (pending_resp_data.some(invitation => invitation.email === email)) {
-        return new Response(JSON.stringify({message: '已发送邀请'}), {status: 201})
+        return new Response(JSON.stringify({message: '已发送邀请'}), {
+            status: 201,
+            headers: {'Content-Type': 'application/json'}
+        })
     }
 
     const invite_resp = await fetch(`https://api.github.com/orgs/${process.env.GITHUB_ORG}/invitations`, {
@@ -51,8 +54,14 @@ export default async function handler(
         })
     })
     if (!invite_resp.ok) {
-        return new Response(JSON.stringify({message: '邀请发送失败，请联系管理员'}), {status: 500})
+        return new Response(JSON.stringify({message: '邀请发送失败，请联系管理员'}), {
+            status: 500,
+            headers: {'Content-Type': 'application/json'}
+        })
     }
 
-    return new Response(JSON.stringify({message: '已发送邀请'}), {status: 201})
+    return new Response(JSON.stringify({message: '已发送邀请'}), {
+        status: 201,
+        headers: {'Content-Type': 'application/json'}
+    })
 }
