@@ -77,7 +77,15 @@ const Home: NextPage = () => {
             <div style={{
                 textAlign: 'center',
             }}>
-                <Snackbar open={showTip} autoHideDuration={6000} onClose={handleClose}>
+                <Snackbar
+                    open={showTip}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
                     <Alert onClose={() => {
                         setShowTip(false)
                     }} severity={tipType}>
